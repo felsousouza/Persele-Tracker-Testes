@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Imprimir Etiquetas - Teste</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 25px;
+        }
+
+        .etiqueta {
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            background: #fafafa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Impressão de Etiquetas (Ambiente de Teste)</h2>
+
+    <p><strong>Plataforma:</strong> <span id="plataforma"></span></p>
+    <p><strong>Tipo:</strong> <span id="tipo"></span></p>
+    <p><strong>Quantidade:</strong> <span id="qtd"></span></p>
+
+    <hr>
+
+    <div id="listaEtiquetas"></div>
+
+    <script>
+        const params = new URLSearchParams(location.search);
+
+        const plataforma = params.get("plataforma") || "";
+        const tipo = params.get("tipo") || "";
+        const etiquetas = Number(params.get("etiquetas") || 0);
+
+        document.getElementById("plataforma").textContent = plataforma;
+        document.getElementById("tipo").textContent = tipo;
+        document.getElementById("qtd").textContent = etiquetas;
+
+        const lista = document.getElementById("listaEtiquetas");
+
+        for (let i = 1; i <= etiquetas; i++) {
+            const div = document.createElement("div");
+            div.className = "etiqueta";
+            div.innerHTML = `<strong>Etiqueta ${i}</strong><br>Simulação de etiqueta impressa`;
+            lista.appendChild(div);
+        }
+
+        // Dispara o diálogo de impressão automaticamente
+        window.onload = () => {
+            setTimeout(() => {
+                window.print();
+            }, 400);
+        };
+    </script>
+
+</body>
+</html>

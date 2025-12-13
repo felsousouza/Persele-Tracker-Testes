@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="popup.css" />
+    <style>
+    body {
+        width: 380px;
+        min-height: 420px;
+        padding: 20px;
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f5f6fa;
+        color: #222;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        font-size: 20px;
+        text-align: center;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .registro-container {
+        background: white;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .registro-header {
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #444;
+    }
+
+    .registro-info {
+        font-size: 14px;
+        margin: 3px 0;
+    }
+
+    .linha-btn-excluir {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 7px;
+    }
+
+    .btnExcluir {
+        background: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: 0.2s;
+    }
+    .btnExcluir:hover {
+        background: #d93636;
+    }
+
+    #btnGerarXLSX {
+        width: 100%;
+        padding: 12px;
+        background: #2c82ff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        margin-top: 15px;
+        transition: 0.2s;
+    }
+    #btnGerarXLSX:hover {
+        background: #1a6be0;
+    }
+
+    #listaRegistros {
+        max-height: 330px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+
+    /* Barra de rolagem mais bonita */
+    #listaRegistros::-webkit-scrollbar {
+        width: 8px;
+    }
+    #listaRegistros::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 6px;
+    }
+</style>
+
+</head>
+
+<body>
+    <h2>Impressões do Dia</h2>
+
+    <div id="listaDia"></div>
+
+    <hr>
+
+    <button id="btnGerarXLSX">Exportar XLSX</button>
+
+    <script src="popup.js"></script>
+</body>
+</html>

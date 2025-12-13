@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Persele Lista - Ambiente de Testes</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+
+        #qtdEtiquetasBox {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: #f8f8f8;
+            width: fit-content;
+            border-radius: 6px;
+        }
+
+        #btnImprimirEtiquetas {
+            margin-top: 15px;
+            padding: 12px 20px;
+            font-size: 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Persele – Lista de Pedidos (Ambiente de Teste)</h2>
+
+    <!-- Seleção da Plataforma -->
+    <label>Plataforma:</label>
+    <select id="plataformaSelect">
+        <option value="">Selecione</option>
+        <option value="Mercado Livre">Mercado Livre</option>
+        <option value="Amazon">Amazon</option>
+        <option value="Shopee">Shopee</option>
+    </select>
+
+    <br><br>
+
+    <!-- Seleção do Tipo -->
+    <label>Tipo de Pedido:</label>
+    <select id="tipoSelect">
+        <option value="">Selecione</option>
+        <option value="Normal">Normal</option>
+        <option value="Expresso">Expresso</option>
+        <option value="Full">Full</option>
+    </select>
+
+    <div id="qtdEtiquetasBox" style="display:none;">
+        <strong>Quantidade de Etiquetas:</strong>
+        <span id="qtdEtiquetas"></span>
+    </div>
+
+    <!-- Tabela Fake -->
+    <table id="tabelaPedidos" style="display:none;">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="selecionarTodos"></th>
+                <th>Pedido</th>
+                <th>Cliente</th>
+            </tr>
+        </thead>
+        <tbody id="listaPedidos"></tbody>
+    </table>
+
+    <button id="btnImprimirEtiquetas">Imprimir Etiquetas</button>
+
+    <script>
+        let quantidadeEtiquetas = 0;
+
+        const plataformaSelect = document.getElementById("plataformaSelect");
+        const tipoSelect = document.getElementById("tipoSelect");
+        const qtdEtiquetasBox = document.getElementById("qtdEtiquetasBox");
+        const qtdEtiquetas = document.getElementById("qtdEtiquetas");
+        const tabelaPedidos = document.getElementById("tabelaPedidos");
+        const listaPedidos = document.getElementById("listaPedidos");
+        const selecionarTodos = document.getElementById("selecionarTodos");
+        const btnImprimir = document.getElementById("btnImprimirEtiquetas");
+
+        tipoSelect.addEventListener("change", () => {
+
+            if (!plataformaSelect.value || !tipoSelect.value)
+                return;
+
+            // Número aleatório de etiquetas
+            quantidadeEtiquetas = Math.floor(Math.random() * 100) + 1;
+
+            qtdEtiquetas.textContent = quantidadeEtiquetas;
+            qtdEtiquetasBox.style.display = "block";
+
+            tabelaPedidos.style.display = "table";
+            btnImprimir.style.display = "inline-block";
+
+            listaPedidos.innerHTML = "";
+
+            for (let i = 1; i <= 5; i++) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><input type="checkbox" class="pedido"></td>
+                    <td>#${1000 + i}</td>
+                    <td>Cliente ${i}</td>
+                `;
+                listaPedidos.appendChild(tr);
+            }
+        });
+
+        selecionarTodos.addEventListener("change", () => {
+            document.querySelectorAll(".pedido").forEach(chk => chk.checked = selecionarTodos.checked);
+        });
+
+        // ABRE PÁGINA DE IMPRESSÃO COM PARAMS
+        btnImprimir.addEventListener("click", () => {
+
+            const url = `persele_imprimir.html?plataforma=${encodeURIComponent(plataformaSelect.value)}&tipo=${encodeURIComponent(tipoSelect.value)}&etiquetas=${quantidadeEtiquetas}`;
+
+            window.open(url, "_blank");
+        });
+    </script>
+
+</body>
+</html>
