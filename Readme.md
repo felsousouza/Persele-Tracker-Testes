@@ -1,3 +1,4 @@
+****Este projeto esta com todas as linhas de codigo geradas por IA, de acordo com minhas orientações e direcionamentos. O objetivo dele é que eu possa aprender na prática a como pensar como um desenvolvedor sem ficar preso ao meu "desconhecimento" prático de escrever códigos. Após a finalização dele, irei fazer um estudo em video destrinchando cada etapa do desenvolvimento, das linhas de código para entender tudo, afinal a IA esta escrevendo, mas eu sou o Master do projeto. ***
 📦 Persele Tracker – Coletor de Impressões de Etiquetas
 📌 Visão Geral
 
