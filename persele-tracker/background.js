@@ -12,6 +12,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 plataforma: msg.plataforma,
                 tipo: msg.tipo,
                 etiquetas: msg.etiquetas,
+                usuario: msg.usuario,
                 timestamp: msg.timestamp,
                 // opcional: sender.tab / sender.id para rastrear origem
             });

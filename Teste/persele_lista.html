@@ -50,6 +50,19 @@
 
     <h2>Persele – Lista de Pedidos (Ambiente de Teste)</h2>
 
+    <!-- Usuário logado (simulação) -->
+    <div id="usuarioLogado" style="
+        margin-bottom: 20px;
+        padding: 10px 15px;
+        background: #f0f2f5;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-weight: bold;
+        width: fit-content;">
+        Usuário logado: <span id="nomeUsuario">MaySanches</span>
+    </div>
+
+
     <!-- Seleção da Plataforma -->
     <label>Plataforma:</label>
     <select id="plataformaSelect">
@@ -100,6 +113,20 @@
         const listaPedidos = document.getElementById("listaPedidos");
         const selecionarTodos = document.getElementById("selecionarTodos");
         const btnImprimir = document.getElementById("btnImprimirEtiquetas");
+
+        // Simulação de usuário logado
+        const usuarioLogado = {
+            nome: "MaySanches"
+        };
+
+        // Salva no sessionStorage para o content.js ler
+        sessionStorage.setItem(
+            "persele_usuario_logado",
+            usuarioLogado.nome
+        );
+
+    // Deixa disponível para futuras integrações
+    window.PERSELE_USUARIO_LOGADO = usuarioLogado;
 
         tipoSelect.addEventListener("change", () => {
 

@@ -1,6 +1,14 @@
 // content.js - Persele Tracker
 console.log("%c[Persele Tracker] content.js ativo", "color: green; font-weight: bold;", location.href);
 
+function lerUsuarioLogado() {
+    try {
+        return sessionStorage.getItem("persele_usuario_logado") || "";
+    } catch (e) {
+        return "";
+    }
+}
+
 // util: lê parâmetros da URL (usado pela página de impressão)
 function lerParamsImpressao() {
     try {
@@ -8,7 +16,8 @@ function lerParamsImpressao() {
         return {
             plataforma: params.get("plataforma") || "",
             tipo: params.get("tipo") || "",
-            etiquetas: Number(params.get("etiquetas") || 0)
+            etiquetas: Number(params.get("etiquetas") || 0),
+            usuario: lerUsuarioLogado()
         };
     } catch (e) {
         return { plataforma: "", tipo: "", etiquetas: 0 };
@@ -135,6 +144,7 @@ function mostrarModalConfirmacao(dados) {
             plataforma: dados.plataforma,
             tipo: dados.tipo,
             etiquetas: Number(dados.etiquetas),
+            usuario: dados.usuario,
             timestamp: new Date().toISOString()
         }, (resp) => {
             console.log("[Persele] registro confirmado e enviado ao background (via modal).");

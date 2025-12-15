@@ -77,6 +77,7 @@ document.getElementById("btnGerarXLSX").addEventListener("click", () => {
         }
 
         const linhas = lista.map(item => ({
+            Usuario: item.usuario,
             Plataforma: item.plataforma,
             Tipo: item.tipo,
             Etiquetas: item.etiquetas,
