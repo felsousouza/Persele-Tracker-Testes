@@ -43,130 +43,198 @@
             cursor: pointer;
             display: none;
         }
+
+        .modal-overlay.hidden {
+        display: none;
+}
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px 24px;
+            width: 360px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-confirmar {
+            background: #2e7d32;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-cancelar {
+            background: #c62828;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
 
-    <h2>Persele – Lista de Pedidos (Ambiente de Teste)</h2>
+<h2>Persele – Lista de Pedidos (Ambiente de Testes)</h2>
 
-    <!-- Usuário logado (simulação) -->
-    <div id="usuarioLogado" style="
-        margin-bottom: 20px;
-        padding: 10px 15px;
-        background: #f0f2f5;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-weight: bold;
-        width: fit-content;">
-        Usuário logado: <span id="nomeUsuario">MaySanches</span>
+<div id="usuarioLogado" style="margin-bottom:20px;padding:10px;background:#f0f2f5;border:1px solid #ccc;border-radius:6px;">
+    Usuário logado: <strong>MaySanches</strong>
+</div>
+
+<label>Plataforma:</label>
+<select id="plataformaSelect">
+    <option value="">Selecione</option>
+    <option value="Mercado Livre">Mercado Livre</option>
+    <option value="Amazon">Amazon</option>
+    <option value="Shopee">Shopee</option>
+</select>
+
+<br><br>
+
+<label>Tipo de Pedido:</label>
+<select id="tipoSelect">
+    <option value="">Selecione</option>
+    <option value="Normal">Normal</option>
+    <option value="Expresso">Expresso</option>
+    <option value="Full">Full</option>
+</select>
+
+<div id="qtdEtiquetasBox" style="display:none;">
+    <strong>Quantidade de Etiquetas:</strong>
+    <span id="qtdEtiquetas"></span>
+</div>
+
+<table id="tabelaPedidos" style="display:none;">
+    <thead>
+        <tr>
+            <th><input type="checkbox" id="selecionarTodos"></th>
+            <th>Pedido</th>
+            <th>Cliente</th>
+        </tr>
+    </thead>
+    <tbody id="listaPedidos"></tbody>
+</table>
+
+<button id="btnImprimirEtiquetas">Imprimir Etiquetas</button>
+
+<!-- MODAL (começa FECHADO) -->
+<div id="modalConfirmacaoImpressao" class="modal-overlay hidden">
+    <div class="modal">
+        <h3>Confirmar</h3>
+        <p>Deseja marcar como impressas as etiquetas?</p>
+
+        <div class="modal-actions">
+            <button id="btnConfirmarImpressao" class="btn-confirmar">Sim</button>
+            <button id="btnCancelarImpressao" class="btn-cancelar">Não</button>
+        </div>
     </div>
+</div>
 
+<script>
+    let quantidadeEtiquetas = 0;
 
-    <!-- Seleção da Plataforma -->
-    <label>Plataforma:</label>
-    <select id="plataformaSelect">
-        <option value="">Selecione</option>
-        <option value="Mercado Livre">Mercado Livre</option>
-        <option value="Amazon">Amazon</option>
-        <option value="Shopee">Shopee</option>
-    </select>
+    const plataformaSelect = document.getElementById("plataformaSelect");
+    const tipoSelect = document.getElementById("tipoSelect");
+    const qtdEtiquetasBox = document.getElementById("qtdEtiquetasBox");
+    const qtdEtiquetas = document.getElementById("qtdEtiquetas");
+    const tabelaPedidos = document.getElementById("tabelaPedidos");
+    const listaPedidos = document.getElementById("listaPedidos");
+    const selecionarTodos = document.getElementById("selecionarTodos");
+    const btnImprimir = document.getElementById("btnImprimirEtiquetas");
 
-    <br><br>
+    // 🔹 Modal e botões (referência única)
+    const modalConfirmacao = document.getElementById("modalConfirmacaoImpressao");
+    const btnConfirmar = document.getElementById("btnConfirmarImpressao");
+    const btnCancelar = document.getElementById("btnCancelarImpressao");
 
-    <!-- Seleção do Tipo -->
-    <label>Tipo de Pedido:</label>
-    <select id="tipoSelect">
-        <option value="">Selecione</option>
-        <option value="Normal">Normal</option>
-        <option value="Expresso">Expresso</option>
-        <option value="Full">Full</option>
-    </select>
+    sessionStorage.setItem("persele_usuario_logado", "MaySanches");
 
-    <div id="qtdEtiquetasBox" style="display:none;">
-        <strong>Quantidade de Etiquetas:</strong>
-        <span id="qtdEtiquetas"></span>
-    </div>
+    tipoSelect.addEventListener("change", () => {
+        if (!plataformaSelect.value || !tipoSelect.value) return;
 
-    <!-- Tabela Fake -->
-    <table id="tabelaPedidos" style="display:none;">
-        <thead>
-            <tr>
-                <th><input type="checkbox" id="selecionarTodos"></th>
-                <th>Pedido</th>
-                <th>Cliente</th>
-            </tr>
-        </thead>
-        <tbody id="listaPedidos"></tbody>
-    </table>
+        quantidadeEtiquetas = Math.floor(Math.random() * 100) + 1;
 
-    <button id="btnImprimirEtiquetas">Imprimir Etiquetas</button>
+        qtdEtiquetas.textContent = quantidadeEtiquetas;
+        qtdEtiquetasBox.style.display = "block";
+        tabelaPedidos.style.display = "table";
+        btnImprimir.style.display = "inline-block";
 
-    <script>
-        let quantidadeEtiquetas = 0;
-
-        const plataformaSelect = document.getElementById("plataformaSelect");
-        const tipoSelect = document.getElementById("tipoSelect");
-        const qtdEtiquetasBox = document.getElementById("qtdEtiquetasBox");
-        const qtdEtiquetas = document.getElementById("qtdEtiquetas");
-        const tabelaPedidos = document.getElementById("tabelaPedidos");
-        const listaPedidos = document.getElementById("listaPedidos");
-        const selecionarTodos = document.getElementById("selecionarTodos");
-        const btnImprimir = document.getElementById("btnImprimirEtiquetas");
-
-        // Simulação de usuário logado
-        const usuarioLogado = {
-            nome: "MaySanches"
-        };
-
-        // Salva no sessionStorage para o content.js ler
-        sessionStorage.setItem(
-            "persele_usuario_logado",
-            usuarioLogado.nome
-        );
-
-    // Deixa disponível para futuras integrações
-    window.PERSELE_USUARIO_LOGADO = usuarioLogado;
-
-        tipoSelect.addEventListener("change", () => {
-
-            if (!plataformaSelect.value || !tipoSelect.value)
-                return;
-
-            // Número aleatório de etiquetas
-            quantidadeEtiquetas = Math.floor(Math.random() * 100) + 1;
-
-            qtdEtiquetas.textContent = quantidadeEtiquetas;
-            qtdEtiquetasBox.style.display = "block";
-
-            tabelaPedidos.style.display = "table";
-            btnImprimir.style.display = "inline-block";
-
-            listaPedidos.innerHTML = "";
-
-            for (let i = 1; i <= 5; i++) {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
+        listaPedidos.innerHTML = "";
+        for (let i = 1; i <= 5; i++) {
+            listaPedidos.innerHTML += `
+                <tr>
                     <td><input type="checkbox" class="pedido"></td>
                     <td>#${1000 + i}</td>
                     <td>Cliente ${i}</td>
-                `;
-                listaPedidos.appendChild(tr);
-            }
-        });
+                </tr>
+            `;
+        }
+    });
 
-        selecionarTodos.addEventListener("change", () => {
-            document.querySelectorAll(".pedido").forEach(chk => chk.checked = selecionarTodos.checked);
-        });
+    selecionarTodos.addEventListener("change", () => {
+        document.querySelectorAll(".pedido").forEach(c => c.checked = selecionarTodos.checked);
+    });
 
-        // ABRE PÁGINA DE IMPRESSÃO COM PARAMS
-        btnImprimir.addEventListener("click", () => {
+    // 🔹 GATILHO PRINCIPAL (inalterado)
+    btnImprimir.addEventListener("click", () => {
 
-            const url = `persele_imprimir.html?plataforma=${encodeURIComponent(plataformaSelect.value)}&tipo=${encodeURIComponent(tipoSelect.value)}&etiquetas=${quantidadeEtiquetas}`;
+        const dados = {
+            plataforma: plataformaSelect.value,
+            tipo: tipoSelect.value,
+            quantidade: quantidadeEtiquetas,
+            usuario: sessionStorage.getItem("persele_usuario_logado")
+        };
 
-            window.open(url, "_blank");
-        });
-    </script>
+        const url = `persele_imprimir.html?plataforma=${encodeURIComponent(dados.plataforma)}&tipo=${encodeURIComponent(dados.tipo)}&etiquetas=${dados.quantidade}`;
+        window.open(url, "_blank");
+
+        // Abre o modal (acréscimo)
+        modalConfirmacao.classList.remove("hidden");
+    });
+
+    // 🔹 SIM → fecha modal
+    btnConfirmar.addEventListener("click", () => {
+        modalConfirmacao.classList.add("hidden");
+
+        document.dispatchEvent(
+            new CustomEvent("persele:confirmacaoImpressao", {
+                detail: { confirmado: true }
+            })
+        );
+    });
+
+    // 🔹 NÃO → fecha modal
+    btnCancelar.addEventListener("click", () => {
+        modalConfirmacao.classList.add("hidden");
+
+        document.dispatchEvent(
+            new CustomEvent("persele:confirmacaoImpressao", {
+                detail: { confirmado: false }
+            })
+        );
+    });
+</script>
+
 
 </body>
 </html>
